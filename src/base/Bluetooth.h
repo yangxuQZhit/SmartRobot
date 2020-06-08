@@ -17,7 +17,6 @@ private:
 
   void readSerial3();
   void writeBuffer(int16_t index, uint8_t c);
-  void writeSerial(uint8_t c);
   uint8_t readBuffer(int16_t index);
   void writeHead();
   void writeEnd();
@@ -27,13 +26,11 @@ private:
 private:
   bool isAvailable = false;
   bool isStart = false;
-  uint8_t prevc=0;
+  uint8_t prevc = 0;
   uint8_t index = 0;
   uint8_t command_index = 0;
   uint8_t dataLen;
   uint8_t bufferBt2[52];
-
-  // uint8_t BluetoothSource = DATA_SERIAL;
   uint8_t serialRead;
 
   String mVersion = "0e.01.018";
@@ -85,7 +82,7 @@ void Bluetooth::run() {
 
 void Bluetooth::readSensor(uint8_t device) {
   writeHead();
-  writeSerial(command_index);
+  Serial3.write(command_index);
   switch (device)
   {
   case VERSION:
@@ -119,62 +116,44 @@ void Bluetooth::readSerial3() {
   isAvailable = false;
   if(Serial3.available() > 0) {
     isAvailable = true;
-    // BluetoothSource = DATA_SERIAL3;
     serialRead = Serial3.read();
   }
 }
 
 void Bluetooth::writeBuffer(int16_t index, uint8_t c) {
-  // if(BluetoothSource == DATA_SERIAL3)
-  // {
-  //   bufferBt2[index]=c;
-  // }
-  bufferBt2[index]=c;
-}
-
-void Bluetooth::writeSerial(uint8_t c) {
-  // if (BluetoothSource == DATA_SERIAL3) {
-  //   Serial3.write(c);
-  // }
-  Serial3.write(c);
+  bufferBt2[index] = c;
 }
 
 uint8_t Bluetooth::readBuffer(int16_t index) {
-  // if (BluetoothSource == DATA_SERIAL3) {
-  //   return bufferBt2[index];
-  // }
   return bufferBt2[index];
 }
 
 void Bluetooth::writeHead() {
-  writeSerial(0xff);
-  writeSerial(0x55);
+  Serial3.write(0xff);
+  Serial3.write(0x55);
 }
 
 void Bluetooth::writeEnd() {
-  // if (BluetoothSource == DATA_SERIAL3) {
-  //   Serial3.println();
-  // }
   Serial3.println();
 }
 
 void Bluetooth::sendString(String s) {
   int16_t l = s.length();
-  writeSerial(4);
-  writeSerial(l);
-  for(int16_t i=0;i<l;i++)
+  Serial3.write(4);
+  Serial3.write(l);
+  for(int16_t i = 0; i < l; i++)
   {
-    writeSerial(s.charAt(i));
+    Serial3.write(s.charAt(i));
   }
 }
 
 void Bluetooth::sendFloat(float value) {
-  writeSerial(2);
+  Serial3.write(2);
   val.floatVal = value;
-  writeSerial(val.byteVal[0]);
-  writeSerial(val.byteVal[1]);
-  writeSerial(val.byteVal[2]);
-  writeSerial(val.byteVal[3]);
+  Serial3.write(val.byteVal[0]);
+  Serial3.write(val.byteVal[1]);
+  Serial3.write(val.byteVal[2]);
+  Serial3.write(val.byteVal[3]);
 }
 
 
