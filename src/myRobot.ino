@@ -14,8 +14,8 @@ extern HardwareSerial Serial3;
 
 #define VERSION                0
 
-boolean isAvailable = false;
-boolean isStart = false;
+bool isAvailable = false;
+bool isStart = false;
 uint8_t prevc=0;
 uint8_t index = 0;
 uint8_t command_index = 0;
