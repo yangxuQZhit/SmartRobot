@@ -1,26 +1,28 @@
 #include <HardwareSerial.h>
+#include "src/base/DC_Motor.h"
 
 #define BUFFER_SIZE 10
 
-extern HardwareSerial Serial3;
+extern HardwareSerial Serial3;//蓝牙串口
 extern HardwareSerial Serial;
 
 String mVersion = "0e.01.018";
 
 int incomingByte = 0;
 unsigned char buffers[BUFFER_SIZE];
+DC_Motor dc(33,32,11);//mega2560引脚号
 
 union {
   uint8_t byte_value[2];
   int16_t short_value;
 } speed;
 
-void connect() {
+void connect() {//连接移动app
   Serial3.write(0xff);
   Serial3.write(0x55);
-  Serial3.write(0x00);  //command_index
+  Serial3.write(0x00);  
   Serial3.write(0x04);
-  Serial3.write(mVersion.length());   //length
+  Serial3.write(mVersion.length());   
   Serial3.write(mVersion.c_str());
   Serial3.println();
 }
@@ -58,6 +60,9 @@ void loop() {
     printBuffer(buffers);
     Serial.print("left speed: ");
     Serial.println(get_left_speed(buffers));
+
+    dc.run(get_left_speed(buffers));//电机转动
+
     Serial.print("right speed: ");
     Serial.println(get_right_speed(buffers));
   }
