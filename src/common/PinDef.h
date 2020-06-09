@@ -9,9 +9,3 @@
 #define START             5
 
 #define VERSION           0
-
-union{
-  uint8_t byteVal[4];
-  float floatVal;
-  long longVal;
-}val;
