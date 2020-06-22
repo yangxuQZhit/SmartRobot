@@ -7,13 +7,14 @@
 #define BUFFER_SIZE 52
 
 extern HardwareSerial Serial;
+extern HardwareSerial Serial2;
 
 String mVersion = "09.01.016";//Makeblock MeAuriga V1.3 开发板
 
 int incomingByte = 0;
 unsigned char buffers[BUFFER_SIZE];
 DC_Motor_Auriga dc(5, 4);           //直流电机
-MeSmartServo mysmartservo(PORT5);   //智能舵机
+MeSmartServo mysmartservo(PORT_5);   //智能舵机
 
 uint8_t serialRead;
 boolean isStart = false;
